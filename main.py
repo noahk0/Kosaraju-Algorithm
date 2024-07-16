@@ -1,17 +1,14 @@
-graph = {}
-g_rev = {}
+from collections import defaultdict
+
+graph = defaultdict(list)
+g_rev = defaultdict(list)
 
 with open("SCC.txt") as file:
   for line in file:
     tail, head = map(int, line.strip().split())
 
     if tail != head:
-      if tail not in graph:
-        graph[tail] = []
       graph[tail].append(head)
-
-      if head not in g_rev:
-        g_rev[head] = []
       g_rev[head].append(tail)
 
 order = []
@@ -25,17 +22,16 @@ for start in g_rev:
     while stack:
       node = stack[-1]
 
-      if node in g_rev:
-        for neighbor in g_rev[node]:
-          if neighbor not in explore:
-            explore.add(neighbor)
-            stack.append(neighbor)
+      for neighbor in g_rev[node]:
+        if neighbor not in explore:
+          explore.add(neighbor)
+          stack.append(neighbor)
 
       if node == stack[-1]:
         order.append(stack.pop())
 
-scc = {}
 explore = set()
+scc = defaultdict(list)
 
 for lead in order[::-1]:
   if lead not in explore:
@@ -46,13 +42,10 @@ for lead in order[::-1]:
       node = stack.pop()
       explore.add(node)
 
-      if node in graph:
-        for neighbor in graph[node]:
-          if neighbor not in explore:
-            explore.add(neighbor)
-            stack.append(neighbor)
+      for neighbor in graph[node]:
+        if neighbor not in explore:
+          explore.add(neighbor)
+          stack.append(neighbor)
 
       if node != lead:
-        if lead not in scc:
-          scc[lead] = []
         scc[lead].append(node)
