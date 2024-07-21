@@ -1,7 +1,6 @@
 from collections import defaultdict
 
-graph = defaultdict(list)
-g_rev = defaultdict(list)
+graph, g_rev = defaultdict(list), defaultdict(list)
 
 with open("SCC.txt") as file:
   for line in file:
@@ -11,8 +10,7 @@ with open("SCC.txt") as file:
       graph[tail].append(head)
       g_rev[head].append(tail)
 
-order = []
-explore = set()
+order, explore = [], set()
 
 for start in g_rev:
   if start not in explore:
@@ -30,8 +28,7 @@ for start in g_rev:
       if node == stack[-1]:
         order.append(stack.pop())
 
-explore = set()
-scc = defaultdict(list)
+explore, scc = set(), defaultdict(list)
 
 for lead in order[::-1]:
   if lead not in explore:
